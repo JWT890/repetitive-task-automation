@@ -1,6 +1,9 @@
 import psutil
 import time
 import logging
+import GPUtil
+from tabulate import tabulate
+import threading
 
 # checks logging based on the time for the file
 # This script monitors system resources and logs the usage statistics.
@@ -53,5 +56,54 @@ def monitor_system():
 
         time.sleep(5)
 
+# Function to check GPU usage
+def check_GPU():
+    while True:
+        # checks for GPU usage and prints the details
+        print("=" * 50, "GPU Details", "=" * 50)
+
+        gpus = GPUtil.getGPUs()
+        # list the details
+        list_gpus = []
+
+        # loops through each GPU and collects its details
+        for gpu in gpus:
+            # collects the ID
+            gpu_id = gpu.id
+            # collects the name, load, memory details, temperature, and UUID
+            # and appends them to the list
+            gpu_name = gpu.name
+            gpu_load = f"{gpu.load*100}%"
+            gpu_memory_free = f"{gpu.memoryFree}MB"
+            gpu_used_memory = f"{gpu.memoryUsed}MB"
+            gpu_total_memory = f"{gpu.memoryTotal}MB"
+            gpu_temperature = f"{gpu.temperature}°C"
+            gpu_uuid = gpu.uuid
+            list_gpus.append((
+                gpu_id, gpu_name, gpu_load, gpu_memory_free,
+                gpu_used_memory, gpu_total_memory, gpu_temperature, gpu_uuid
+            ))
+
+            # prints the details
+            print(tabulate(list_gpus, headers=(
+                "ID", "Name", "Load", "Free Memory", "Used Memory", "Total Memory", "Temperature", "UUID")))
+        
+        print("=" * 50)
+        time.sleep(5)
+
+
 if __name__ == "__main__":
-    monitor_system()
+    # Create threads for monitoring system and checking GPU so they can run at once
+    t1 = threading.Thread(target=monitor_system, daemon=True)
+    t2 = threading.Thread(target=check_GPU, daemon=True)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+
+    t1.end()
+    t2.end()
+    print("Monitoring stopped.")
+    
