@@ -85,7 +85,7 @@ network_status() {
     echo "Working on it"
 }
 
-OPTIONS=("Check Disk Usage" "Create log file" "Check Memory", "Network Monitoring", "Exit")
+OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Exit")
 select choice in "${OPTIONS[@]}"
 do
     case $choice in 
