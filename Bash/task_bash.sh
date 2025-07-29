@@ -69,7 +69,7 @@ check_memory() {
     # Get memory usage
     total_memory_usage=$(free -m | grep "Mem" | awk '/Mem/{print $2}')
     used_memory_usage=$(free -m | grep "Mem" | awk '/Mem/{print $3}')
-    free_memory_usage=$(free -m | grep 'Mem' | awk '/Mem/print $4}')
+    free_memory_usage=$(free -m | grep 'Mem' | awk '/Mem/{print $4}')
 
     used_memory_percentage=$(( (used_memory_usage * 100) / total_memory_usage))
 
