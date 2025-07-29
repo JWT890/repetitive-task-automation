@@ -82,7 +82,7 @@ check_memory() {
 }
 
 network_status() {
-
+    echo "Working on it"
 }
 
 OPTIONS=("Check Disk Usage" "Create log file" "Check Memory", "Network Monitoring", "Exit")
