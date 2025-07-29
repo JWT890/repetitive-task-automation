@@ -85,7 +85,11 @@ network_status() {
     echo "Working on it"
 }
 
-OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Exit")
+check_processes() {
+
+}
+
+OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
 select choice in "${OPTIONS[@]}"
 do
     case $choice in 
@@ -103,6 +107,10 @@ do
             ;;
         "Network Monitoring")
             network_status
+            break
+            ;;
+        "Processes Check")
+            check_processes
             break
             ;;
         "Exit")
