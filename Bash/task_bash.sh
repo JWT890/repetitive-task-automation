@@ -45,18 +45,47 @@ check_disk_usage() {
     fi
 }
 
+# Function to create a log file
 create_log_file() {
     LOG_FILE="storage_report.txt"
+    # creates the log file
     touch $LOG_FILE
     echo "Log file created successfully"
 }
 
 check_memory() {
     echo "Memory check option selected"
+    if [[ $EUID -ne 0 ]]; then
+        echo "This script must be run as root" >&2
+        exit 1
+    fi
+
+    LOG_FILE1="memory_report.txt"
+    echo "-------------------------" >> "${LOG_FILE1}"
+    echo "Memory Usage Report" >> "${LOG_FILE1}"
+    echo "-------------------------" >> "${LOG_FILE1}"
+
+
+    # Get memory usage
+    total_memory_usage=$(free -m | grep "Mem" | awk '/Mem/{print $2}')
+    used_memory_usage=$(free -m | grep "Mem" | awk '/Mem/{print $3}')
+    free_memory_usage=$(free -m | grep 'Mem' | awk '/Mem/print $4}')
+
+    used_memory_percentage=$(( (used_memory_usage * 100) / total_memory_usage))
+
+    echo "Total Memory: ${total_memory_usage} MB" >> "${LOG_FILE1}"
+    echo "Used Memory: ${used_memory_usage} MB" >> "${LOG_FILE1}"
+    echo "Free Memory: ${free_memory_usage} MB" >> "${LOG_FILE1}"
+    echo "Used Memory Percentage: ${used_memory_percentage}%" >> "${LOG_FILE1}"
+
+    echo "Memory check completed. Report saved to ${LOG_FILE1}"
+}
+
+network_status() {
 
 }
 
-OPTIONS=("Check Disk Usage" "Create log file" "Check Memory")
+OPTIONS=("Check Disk Usage" "Create log file" "Check Memory", "Network Monitoring", "Exit")
 select choice in "${OPTIONS[@]}"
 do
     case $choice in 
@@ -71,6 +100,14 @@ do
         "Check Memory")
             check_memory
             break
+            ;;
+        "Network Monitoring")
+            network_status
+            break
+            ;;
+        "Exit")
+            echo "Exiting the script."
+            exit 0
             ;;
         *)
             echo "Invalid option, please try again."
