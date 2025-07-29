@@ -76,3 +76,6 @@ check_memory() {
 
 }
 
+check_disk_usage
+create_log_file
+check_memory
