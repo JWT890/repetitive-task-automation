@@ -13,11 +13,11 @@ check_disk_usage() {
     LOG_FILE= "storage_report.txt"
 
     # prints to the report file
-    echo "-------------------------" >> $LOG_FILE
+    echo "-------------------------" >> "${LOG_FILE}"
     # prints to the report file
-    echo "Disk Usage Report" >> $LOG_FILE
+    echo "Disk Usage Report" >> "${LOG_FILE}"
     # prints to the report file
-    echo "-------------------------" >> $LOG_FILE
+    echo "-------------------------" >> "${LOG_FILE}"
 
     # checks disk usage for a specific partition
     # you can change the partition as needed
@@ -34,14 +34,14 @@ check_disk_usage() {
     # checks for if the critical threshold has been met or exceeded
     if [[ $DISK_USAGE -ge $CRITICAL_THRESHOLD ]]; then
         # prints it has and must be addressed and prints to the report file
-        echo "CRITICAL: Disk usage on $disk_usage%: Immediate action required!" >> $LOG_FILE
+        echo "CRITICAL: Disk usage on $disk_usage%: Immediate action required!" >> "${LOG_FILE}"
     # checks for if the warning threshold has been met or reached
     elif [[ $DISK_USAGE -ge $WARNING_THRESHOLD ]]; then
         # prints it has and must consider cleaning up resources and prints to the report file
-        echo "WARNING: Disk usage on $disk_usage%: Consider cleaning up." >> $LOG_FILE
+        echo "WARNING: Disk usage on $disk_usage%: Consider cleaning up." >> "${LOG_FILE}"
     else
         # prints that nothing of note needs to be done and prints to the report file
-        echo "OK: Disk usage on $disk_usage%." >> $LOG_FILE
+        echo "OK: Disk usage on $disk_usage%." >> "${LOG_FILE}"
     fi
 }
 
