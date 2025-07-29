@@ -1,26 +1,6 @@
 #!/bin/bash
 
-OPTIONS=("Check Disk Usage" "Create log file" "Check Memory")
-select choice in "${OPTIONS[@]}"
-do
-    case $choice in 
-        "Check Disk Usage")
-            check_disk_usage
-            break
-            ;;
-        "Create log file")
-            create_log_file
-            break
-            ;;
-        "Check Memory")
-            check_memory
-            break
-            ;;
-        *)
-            echo "Invalid option, please try again."
-            ;;
-    esac
-done
+
 check_disk_usage() {
 # checks to see if the script is being run as root
     if [[ $EUID -ne 0 ]]; then
@@ -76,6 +56,24 @@ check_memory() {
 
 }
 
-check_disk_usage
-create_log_file
-check_memory
+OPTIONS=("Check Disk Usage" "Create log file" "Check Memory")
+select choice in "${OPTIONS[@]}"
+do
+    case $choice in 
+        "Check Disk Usage")
+            check_disk_usage
+            break
+            ;;
+        "Create log file")
+            create_log_file
+            break
+            ;;
+        "Check Memory")
+            check_memory
+            break
+            ;;
+        *)
+            echo "Invalid option, please try again."
+            ;;
+    esac
+done
