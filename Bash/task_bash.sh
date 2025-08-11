@@ -82,11 +82,18 @@ check_memory() {
 }
 
 network_status() {
-    echo "Working on it"
+    if ping -c 1 google.com &> /dev/null; then
+        echo "Internet connection is active"
+    else
+        echo "Internet connection: Not available"
+    fi
+
+    echo "Netowork Interface Information:"
+    ip addr show
 }
 
 check_processes() {
-
+    echo "Working on it"
 }
 
 OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
