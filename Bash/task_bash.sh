@@ -53,13 +53,17 @@ create_log_file() {
     echo "Log file created successfully"
 }
 
+# function to check the memory
 check_memory() {
     echo "Memory check option selected"
+    # checks to see if the script is being run as root
     if [[ $EUID -ne 0 ]]; then
+        # exits out
         echo "This script must be run as root" >&2
         exit 1
     fi
 
+    # generates the memory report
     LOG_FILE1="memory_report.txt"
     echo "-------------------------" >> "${LOG_FILE1}"
     echo "Memory Usage Report" >> "${LOG_FILE1}"
@@ -71,6 +75,7 @@ check_memory() {
     used_memory_usage=$(free -m | grep "Mem" | awk '/Mem/{print $3}')
     free_memory_usage=$(free -m | grep 'Mem' | awk '/Mem/{print $4}')
 
+    # gets the memory used total
     used_memory_percentage=$(( (used_memory_usage * 100) / total_memory_usage))
 
     echo "Total Memory: ${total_memory_usage} MB" >> "${LOG_FILE1}"
@@ -81,38 +86,51 @@ check_memory() {
     echo "Memory check completed. Report saved to ${LOG_FILE1}"
 }
 
+# function to check the network status
 network_status() {
+    # pings for Google
     if ping -c 1 google.com &> /dev/null; then
+        # if internet is working
         echo "Internet connection is active"
     else
+        # if not
         echo "Internet connection: Not available"
     fi
 
     echo "Netowork Interface Information:"
+    # shows the ips
     ip addr show
 }
 
+# checks for running processes
 check_processes() {
+    # checks cpu, memory, apps, and terminal for process usage
     processes=$(ps -eo pid,cmd,%cpu,%mem --sort=%cpu)
 
+    #organizes by CPU usage
     echo "Top 10 Processes by CPU Usage:"
     echo "$processes" | head -n 11
 
+    # organizes by high processes
     high_cpu_processes=$(ps -eo pid,cmd,%cpu --sort=-%cpu | awk '$3 > 50 {print $0}')
 
+    # checks for high cpu processes that are running
     if [ -n "$high_cpu_processes" ]; then
         echo "Warning: High CPU Processes Detected:"
         echo "$high_cpu_processes"
     fi
 
+    # organizes by high memory usage
     high_mem_processes=$(ps -eo pid,cmd,%mem --sort=-%mem | awk '$3 > 50 {print $0} ')
 
+    # checks for high mem processes that are running
     if [ -n "$high_mem_processes" ]; then
         echo "Warning: High Memory Processes Detected:"
         echo "$high_mem_processes"
     fi
 }
 
+# runs a option to choose option wanting to check from the user input
 OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
 select choice in "${OPTIONS[@]}"
 do
