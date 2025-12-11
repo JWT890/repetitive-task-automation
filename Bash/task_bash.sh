@@ -93,23 +93,24 @@ network_status() {
 }
 
 check_processes() {
-    processes=$(ps -eo pid, cmd, %cpu, %mem --sort=%cpu)
+    processes=$(ps -eo pid,cmd,%cpu,%mem --sort=%cpu)
 
     echo "Top 10 Processes by CPU Usage:"
     echo "$processes" | head -n 11
 
-    high_cpu_processes=$(ps -eo pid, cmd,%cpu --sort=-%cpu | awk '$3 > 50 {print $0}')
+    high_cpu_processes=$(ps -eo pid,cmd,%cpu --sort=-%cpu | awk '$3 > 50 {print $0}')
 
     if [ -n "$high_cpu_processes" ]; then
         echo "Warning: High CPU Processes Detected:"
         echo "$high_cpu_processes"
     fi
 
-    high_mem_processes=$(ps -eo pid,cmc,%mem --sort=-%mem | awk '$3 > 50 {print $0} ')
+    high_mem_processes=$(ps -eo pid,cmd,%mem --sort=-%mem | awk '$3 > 50 {print $0} ')
 
     if [ -n "$high_mem_processes" ]; then
         echo "Warning: High Memory Processes Detected:"
         echo "$high_mem_processes"
+    fi
 }
 
 OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
