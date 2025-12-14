@@ -1,20 +1,21 @@
 #include <iostream>
 #include <string>
-#include <cdtdlib>
-#include <time>
-#include <unistd.d>
-#include <time>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
 
 using namespace std;
 
 string generatePassword() {
-    const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$",
+    const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
     string password;
+
     srand(time(nullptr));
 
     for (int i = 0; i < 12; i++) {
-        password = chars[rand() % chars.length()];
+        password += chars[rand() % chars.length()];
     }
+
     return password;
 }
 
