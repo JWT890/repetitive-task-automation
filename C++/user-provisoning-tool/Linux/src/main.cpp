@@ -1,25 +1,26 @@
+#define _POSIX_C_SOURCE 200809L
 #include <iostream>
 #include <string>
-#include <cdtdlib>
-#include <time>
-#include <unistd.d>
-#include <time>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
+
 
 using namespace std;
 
 string generatePassword() {
-    const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$",
+    const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
     string password;
-    srand(time(nullptr));
+    srand(static_cast<unsigned int>(time(0)));
 
     for (int i = 0; i < 12; i++) {
-        password = chars[rand() % chars.length()];
+        password += chars[static_cast<size_t>(rand()) % chars.length()];
     }
     return password;
 }
 
 bool isRoot() {
-    return geteuid() == 0;
+    return getpid() == 0;
 }
 
 void logAction(const string& action, const string& username, bool success) {
