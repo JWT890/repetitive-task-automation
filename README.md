@@ -18,4 +18,11 @@ Patch Monitor Status Static:
 Checks to see if patched systems are up to date and compliant or not.  
 
 C++:  
+User Provisioning Tool or main.cpp (run in Linux!)  
+Run the command: g++ -std=c++17 -o userprov main.cpp  
+Create user: sudo ./userprov create username or jdoe "John Doe"  
+With groups: sudo ./userprov create jdoe "John Doe" docker,developers  
+Delete user: sudo ./userprov delete jdoe --remove-home  
+Enable/Disable: sudo ./userprov disable jdoe same with enable  
+List: sudo ./userprov list  
 
