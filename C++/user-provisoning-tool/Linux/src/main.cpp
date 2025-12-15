@@ -4,18 +4,30 @@
 #include <cstdlib>
 #include <ctime>
 #include <unistd.h>
+<<<<<<< HEAD:C++/user-provisoning-tool/Linux/src/main.cpp
 
+=======
+>>>>>>> ece1a703b4ab772cee9b6f9162b35c5ab5884e2b:C++/user-provisoning-tool/src/main.cpp
 
 using namespace std;
 
 string generatePassword() {
     const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
     string password;
+<<<<<<< HEAD:C++/user-provisoning-tool/Linux/src/main.cpp
     srand(static_cast<unsigned int>(time(0)));
 
     for (int i = 0; i < 12; i++) {
         password += chars[static_cast<size_t>(rand()) % chars.length()];
+=======
+
+    srand(time(nullptr));
+
+    for (int i = 0; i < 12; i++) {
+        password += chars[rand() % chars.length()];
+>>>>>>> ece1a703b4ab772cee9b6f9162b35c5ab5884e2b:C++/user-provisoning-tool/src/main.cpp
     }
+
     return password;
 }
 
