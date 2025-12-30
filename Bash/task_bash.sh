@@ -157,15 +157,31 @@ check_system_updates() {
     echo "System updated sucessfully!"
 }
 
+# checks the systemctl status of a service
 check_systemctl_status() {
-    SERVICE_NAME=$1
-    echo "Checking status of $1..."
-    if ! systemctl is-active --quiet $1; then
-        echo "$1 is not running. Attempting to start..."
-        systemctl restart $1
+    # takes user input for the service name
+    echo "Enter the name of the service:"
+    read -r service_name
+
+    # checks the status of it
+    echo "Checking status of $service_Name..."
+    if ! command -v systemctl &> /dev/null; then
+        # prints error if systemctl is not found
+        echo "Error: systemctl command not found" >&2
+        return 1
+    fi
+
+    # checks if the service is running
+    local status=$(systemctl is-active --quiet "$service_name")
+    # if active
+    if [[ status == "active" ]]; then
+        # prints that the service is running 
+        echo "$service_name is running. no need to restart"
+        systemctl status "$service_name"
     else
-        echo "$1 is running. No need to restart..."
-        systemctl status $1
+        # if not running, attempts to restart
+        echo "$service_name is not running. attempting to restart"
+        systemctl restart "$service_name"
     fi
 }
 
