@@ -130,6 +130,25 @@ check_processes() {
     fi
 }
 
+check_system_updates() {
+    echo " === System Update Script ==="
+    LOG_FILE='/var/log/system_updates.log'
+    echo "Update started: $(date)" >> $LOG_FILE
+    if command -v apt-get &> /dev/null; then
+        apt-get update -y
+        apt-get upgrade -y
+        apt-get autoremove -y
+    elif command -v yum &> /dev/null; then
+        yum update -y
+        yum autoremove -y
+    elif commdn -v dnf &> /dev/null; then
+        dnf upgrade -y
+        dnf autoremove -y
+    fi
+    echo "Update completed: $(date)" >> $LOG_FILE
+    echo "System updated sucessfully!"
+}
+
 # runs a option to choose option wanting to check from the user input
 OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
 select choice in "${OPTIONS[@]}"
@@ -153,6 +172,10 @@ do
             ;;
         "Processes Check")
             check_processes
+            break
+            ;;
+        "System Update Check")
+            check_system_updates
             break
             ;;
         "Exit")
