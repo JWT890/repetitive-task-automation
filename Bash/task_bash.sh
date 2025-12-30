@@ -130,27 +130,47 @@ check_processes() {
     fi
 }
 
+# checks for system updates
 check_system_updates() {
     echo " === System Update Script ==="
+    # logs the updates
     LOG_FILE='/var/log/system_updates.log'
+    # says the update has started and logs the date in the log file
     echo "Update started: $(date)" >> $LOG_FILE
+    # detects what operating system is running
     if command -v apt-get &> /dev/null; then
+        # Debian/Ubuntu
         apt-get update -y
         apt-get upgrade -y
         apt-get autoremove -y
+    # CentOS
     elif command -v yum &> /dev/null; then
         yum update -y
         yum autoremove -y
-    elif commdn -v dnf &> /dev/null; then
+    # RHEL
+    elif command -v dnf &> /dev/null; then
         dnf upgrade -y
         dnf autoremove -y
     fi
+    # prints the update has completed and logs to the file
     echo "Update completed: $(date)" >> $LOG_FILE
     echo "System updated sucessfully!"
 }
 
+check_systemctl_status() {
+    SERVICE_NAME=$1
+    echo "Checking status of $1..."
+    if ! systemctl is-active --quiet $1; then
+        echo "$1 is not running. Attempting to start..."
+        systemctl restart $1
+    else
+        echo "$1 is running. No need to restart..."
+        systemctl status $1
+    fi
+}
+
 # runs a option to choose option wanting to check from the user input
-OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "Exit")
+OPTIONS=("Check Disk Usage" "Create log file" "Check Memory" "Network Monitoring" "Processes Check" "System Update Check" "Systemctl Status" "Exit")
 select choice in "${OPTIONS[@]}"
 do
     case $choice in 
@@ -176,6 +196,10 @@ do
             ;;
         "System Update Check")
             check_system_updates
+            break
+            ;;
+        "Systemctl Status")
+            check_systemctl_status
             break
             ;;
         "Exit")
