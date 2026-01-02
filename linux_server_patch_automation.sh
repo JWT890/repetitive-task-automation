@@ -14,31 +14,24 @@ fi
 
 echo "Starting..." >> "$LOG_FILE"
 
+wait_for_apt() {
+    echo "Checking if package manager is available"
+    while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+        echo "Package manager is busy. Waiting..."
+        sleep 5
+    done
+}
+
 check_linux_system() {
     echo "Checking the Linux system..."
+    DISTRO="$(lsb_release -is)"
+    wait_for_apt
     case "$DISTRO" in
-        Debian*)
-            sudo apt-get update -y
-            sudo apt-get upgrade -y
+        Debian*|Ubuntu*|Kali*)
+            sudo apt-get update && sudo apt-get upgrade -y
             ;;
-        CentOS*)
-            sudo apt-get update -y
-            sudo apt-get upgrade -y
-            ;;
-        Ubuntu*)
-            sudo apt-get update -y
-            sudo apt-get upgrade -y
-            ;;
-        RHEL*)
+        RHEL*|CentOS*|Oracle*)
             sudo yum update -y
-            ;;
-        Oracle*)
-            sudo apt-get update -y
-            sudo apt-get upgrade -y
-            ;;
-        Kali*)
-            sudo apt-get update -y
-            sudo apt-get upgrade -y
             ;;
         *)
             echo "Unsupported distro: $DISTRO"
@@ -50,26 +43,14 @@ check_linux_system() {
 }
 
 install_packages() {
-    LOG_FILE='/var/log/system_updates.log'
     echo "Installing packages..."
     DISTRO="$(lsb_release -is)"
+    PACKAGES="vim curl wget"
     case "$DISTRO" in
-        Debian*)
-            sudo apt-get install -y 
-            ;;
-        Ubuntu*)
+        Debian*|Ubuntu*|Kali*)
             sudo apt-get install -y
             ;;
-        CentOS*)
-            sudo apt-get install -y
-            ;;
-        Oracle*)
-            sudo apt-get install -y
-            ;;
-        Kali*)
-            sudo apt-get install -y
-            ;;
-        RHEL*)
+        RHEL*|CentOS*|Oracle*)
             sudo yum install -y
             ;;
         *)
@@ -84,23 +65,11 @@ remove_packages() {
     echo "Checking for packages to remove..."
     DISTRO="$(lsb_release -is)"
     case "$DISTRO" in
-        Debian*)
-            sudo apt autoremove -y
+        Debian*|Ubuntu*|Kali*)
+            sudo apt-get autoremove -y
             ;;
-        Ubuntu*)
-            sudo apt autoremove -y
-            ;;
-        RHEL*)
+        RHEL*|CentOS*|Oracle*)
             sudo yum autoremove -y
-            ;;
-        CentOS*)
-            sudo apt autoremove -y
-            ;;
-        Oracle*)
-            sudo apt autoremove -y
-            ;;
-        Kali*)
-            sudo apt autoremove -y
             ;;
         *)
             echo "Unsupported. Skipping"
