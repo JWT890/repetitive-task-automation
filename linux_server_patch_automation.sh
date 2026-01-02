@@ -14,18 +14,22 @@ fi
 
 echo "Starting..." >> "$LOG_FILE"
 
-wait_for_apt() {
+wait_for_lock() {
     echo "Checking if package manager is available"
-    while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+    while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 || fuser /var/lib/dpkg/locka > /dev/null 2>&1; do
         echo "Package manager is busy. Waiting..."
         sleep 5
     done
 }
 
+check_for_updates() {
+    
+}
+
 check_linux_system() {
     echo "Checking the Linux system..."
-    DISTRO="$(lsb_release -is)"
-    wait_for_apt
+    $DISTRO="$(lsb_release -is)"
+    wait_for_lock
     case "$DISTRO" in
         Debian*|Ubuntu*|Kali*)
             sudo apt-get update && sudo apt-get upgrade -y
