@@ -25,5 +25,7 @@ def delete_user_account(username):
         print(f"Error: {e}")
 
 if __name__ == 'main':
-    create_user_account("new_user")
-    delete_user_account("new_user")
+    username = input("Create the username: ")
+    create_user_account("new-user")
+    username = input("Delete the username: ")
+    delete_user_account("new-user")
